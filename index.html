@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Lost & Found Tracker</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .dark-mode {
+            background-color: #121212;
+            color: #ffffff;
+        }
+        .logout-btn {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcThxI2ANdrDFW9RpkN46tmkSynaaF81a42DCQ&s" alt="Lost & Found Logo">
+                <span>Lost & Found Tracker</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="view-lost.html">View Lost Items</a></li>
+                <li><a href="view-found.html">View Found Items</a></li>
+            </div> 
+        </ul>
+    </nav>
+</header>
+
+<div class="dashboard-header">
+    <div class="user-info">
+        <div>
+            <h1>Dashboard</h1>
+            <p id="user-greeting">Welcome, User</p>
+        </div>
+        <button id="logout-btn" class="logout-btn">Logout</button>
+    </div>
+</div>
+<button id="theme-toggle">Toggle Dark Mode</button>
+
+<main>
+    <section class="hero">
+        <h1>Welcome to Lost & Found Tracker</h1>
+        <p>Helping you reconnect with your lost items</p>
+        <div class="cta-buttons">
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSd9VK8jEB8EMO7O--E3OnioLS4m0P_FQpecf1JZf5n4Z1577w/viewform?usp=sf_link" class="btn primary">Report Lost Item</a>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSc1bgMMTjHv6f8HVBIGh0HjozvFQmy8OFKDDdXx3AACcbZL9A/viewform?usp=sf_link" class="btn secondary">Report Found Item</a>
+        </div>
+    </section>
+    <!-- View Lost and Found Items with descriptions -->
+    <section>
+        <h2>View Lost Items</h2>
+        <div id="view-lost-items" class="item-container">
+            <!-- Lost items will be populated dynamically here -->
+        </div>
+
+        <h2>View Found Items</h2>
+        <div id="view-found-items" class="item-container">
+            <!-- Found items will be populated dynamically here -->
+        </div>
+    </section>
+
+    <!-- Notification Section for matches -->
+    <div id="notification" style="display: none; color: green; font-weight: bold;">
+        Match Found: <span id="matched-item"></span>
+    </div>
+    <button onclick="checkMatch()">Check for Matches</button>
+    <section class="features">
+        <h2>How It Works</h2>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRh3lE0nm3-GjXhSkmw_l4yXtk0Cu9lAu2wJspV4a7EX64X5g8RBIVursZEqyGeBeAC-Sc&usqp=CAU" alt="Report Icon">
+                <h3>Report Items</h3>
+                <p>Easily report lost or found items with detailed descriptions</p>
+            </div>
+            <div class="feature-card">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSCeerUD-b76VEGcm9QaKVqx4NoeiIcX_Wz-zqrbMIokL_OhFEjsmx1RH_AnYsYAVPKNtQ&usqp=CAU" alt="Search Icon">
+                <h3>Search Database</h3>
+                <p>Search through our database of reported items</p>
+            </div>
+            <div class="feature-card">
+                <img src="https://cdn-icons-png.flaticon.com/512/11875/11875209.png" alt="Connect Icon">
+                <h3>Connect</h3>
+                <p>Get notified when a match is found</p>-
+            </div>
+        </div>
+
+    </section>
+</main>
+<form id="feedback-form">
+    <textarea placeholder="Your feedback here..."></textarea>
+    <button type="submit">Submit</button>
+</form>
+<script>
+    document.getElementById("feedback-form").addEventListener("submit", (e) => {
+        e.preventDefault();
+        alert("Thank you for your feedback!");
+    });
+</script>
+</main>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
+
+    // Firebase Configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyBNi4q80iVuqjxGBECM41QX-jEo-ZYVhBI",
+        authDomain: "finance-tracker-dfa43.firebaseapp.com",
+        projectId: "finance-tracker-dfa43",
+        storageBucket: "finance-tracker-dfa43.firebasestorage.app",
+        messagingSenderId: "547493129552",
+        appId: "1:547493129552:web:b20362a4ea26c1048d5055",
+        measurementId: "G-B7V55GXMMW"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // Redirect to landing page if not authenticated
+    onAuthStateChanged(auth, (user) => {
+        if (!user) {
+            console.log("User not authenticated. Redirecting to landing page...");
+            window.location.href = "landing-page.html";
+        }
+    });
+
+    // Logout Functionality
+    document.getElementById('logout-btn').addEventListener('click', async () => {
+        try {
+            await signOut(auth);
+            alert("You have been logged out successfully.");
+            window.location.href = "landing-page.html";
+        } catch (error) {
+            console.error("Error during logout:", error.message);
+            alert("Logout failed. Please try again.");
+        }
+    });
+
+    // Dark Mode Toggle
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        document.body.classList.toggle("dark-mode");
+    });
+</script>
+<footer>
+    <p>&copy; 2024 Lost & Found Tracker. All rights reserved.</p>
+</footer>
+<script src="script.js" type=""module></script>
+
+</body>
+</html>

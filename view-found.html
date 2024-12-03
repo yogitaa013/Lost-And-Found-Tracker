@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Found Items</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcThxI2ANdrDFW9RpkN46tmkSynaaF81a42DCQ&s" alt="Lost & Found Logo">
+                <span>Lost & Found Tracker</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="view-lost.html">View Lost Items</a></li>
+                <li><a href="view-found.html" class="active">View Found Items</a></li>
+                
+            </ul>
+        </nav>
+    </header>
+    <!-- Add to view-lost.html and view-found.html -->
+<input type="text" id="search-bar" placeholder="Search items..." onkeyup="filterItems()">
+<script>
+    function filterItems() {
+        const query = document.getElementById("search-bar").value.toLowerCase();
+        const items = document.querySelectorAll(".item");
+
+        items.forEach((item) => {
+            const text = item.textContent.toLowerCase();
+            item.style.display = text.includes(query) ? "block" : "none";
+        });
+    }
+</script>
+
+
+    <main>
+        <h1>Found Items</h1>
+        <div id="found-items-container" class="items-container">
+            <!-- Data will be dynamically added here -->
+        </div>
+    </main>
+    
+    <footer>
+        <p>&copy; 2024 Lost & Found Tracker. All rights reserved.</p>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>
